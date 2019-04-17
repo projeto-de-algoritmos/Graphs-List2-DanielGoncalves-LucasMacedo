@@ -72,9 +72,11 @@ class Node():
         self.top_border = NodeBorder(
             self.pos_x, self.pos_y, SIZE, BORDER_THICKNESS)
         self.bottom_border = NodeBorder(
-            self.pos_x, self.pos_y + SIZE - BORDER_THICKNESS, SIZE, BORDER_THICKNESS)
+            self.pos_x, self.pos_y + SIZE - BORDER_THICKNESS,
+            SIZE, BORDER_THICKNESS)
         self.right_border = NodeBorder(
-            self.pos_x + SIZE - BORDER_THICKNESS, self.pos_y, BORDER_THICKNESS, SIZE)
+            self.pos_x + SIZE - BORDER_THICKNESS, self.pos_y,
+            BORDER_THICKNESS, SIZE)
         self.left_border = NodeBorder(
             self.pos_x, self.pos_y, BORDER_THICKNESS, SIZE)
 
@@ -124,7 +126,8 @@ class Maze():
         for i in range(0, int(HEIGHT / SIZE)):
             for j in range(0, int(WIDTH / SIZE)):
                 self.maze[i][j].neighbors_not_visited = [
-                    x for x in self.maze[i][j].neighbors_not_visited if not x.visited]
+                    x for x in self.maze[i][j].neighbors_not_visited
+                    if not x.visited]
 
     def define_initial_neighbors_not_visited(self):
         id = 0
@@ -134,7 +137,8 @@ class Maze():
                 self.maze[i][j].matrix_pos_y = j
                 id += 1
                 self.maze[i][j].id = id
-                if i > 0 and j > 0 and i < int(HEIGHT / SIZE) - 1 and j < int(HEIGHT / SIZE) - 1:
+                if (i > 0 and j > 0 and i < int(HEIGHT / SIZE) - 1 and
+                        j < int(HEIGHT / SIZE) - 1):
                     self.maze[i][j].neighbors_not_visited.append(
                         self.maze[i + 1][j])  # bot
                     self.maze[i][j].neighbors_not_visited.append(
@@ -158,7 +162,8 @@ class Maze():
                         self.maze[i][j - 1])  # left
                     self.maze[i][j].neighbors_not_visited.append(
                         self.maze[i + 1][j])  # bot
-                elif i == int(HEIGHT / SIZE) - 1 and j == int(WIDTH / SIZE) - 1:
+                elif (i == int(HEIGHT / SIZE) - 1 and
+                        j == int(WIDTH / SIZE) - 1):
                     self.maze[i][j].neighbors_not_visited.append(
                         self.maze[i][j - 1])  # left
                     self.maze[i][j].neighbors_not_visited.append(
@@ -193,12 +198,14 @@ class Maze():
                         self.maze[i][j - 1])  # left
 
     def dijkstra_to_define_final(self, background):
-        initial_node = self.maze[self.initial_coordinate_x][self.initial_coordinate_y]
+        initial_node = self.maze[self.initial_coordinate_x][
+            self.initial_coordinate_y]
         max_distance = 100000
         distances = {}
         for i in range(0, int(HEIGHT / SIZE)):
             for j in range(0, int(WIDTH / SIZE)):
-                if self.maze[i][j] == self.maze[self.initial_coordinate_x][self.initial_coordinate_y]:
+                if (self.maze[i][j] == self.maze[self.initial_coordinate_x][
+                        self.initial_coordinate_y]):
                     distances[self.maze[i][j]] = 0
                 else:
                     distances[self.maze[i][j]] = max_distance
@@ -235,19 +242,23 @@ class Maze():
 
     def break_border(self, node, neightbor, color):
         # right
-        if (neightbor.matrix_pos_x == node.matrix_pos_x + 1) and (neightbor.matrix_pos_y == node.matrix_pos_y):
+        if (neightbor.matrix_pos_x == node.matrix_pos_x + 1) and (
+                neightbor.matrix_pos_y == node.matrix_pos_y):
             node.right_border.color = color
             neightbor.left_border.color = color
         # left
-        elif (neightbor.matrix_pos_x == node.matrix_pos_x - 1) and (neightbor.matrix_pos_y == node.matrix_pos_y):
+        elif (neightbor.matrix_pos_x == node.matrix_pos_x - 1) and (
+                neightbor.matrix_pos_y == node.matrix_pos_y):
             node.left_border.color = color
             neightbor.right_border.color = color
         # bot
-        elif (neightbor.matrix_pos_x == node.matrix_pos_x) and (neightbor.matrix_pos_y == node.matrix_pos_y + 1):
+        elif (neightbor.matrix_pos_x == node.matrix_pos_x) and (
+                neightbor.matrix_pos_y == node.matrix_pos_y + 1):
             node.bottom_border.color = color
             neightbor.top_border.color = color
         # top
-        elif (neightbor.matrix_pos_x == node.matrix_pos_x) and (neightbor.matrix_pos_y == node.matrix_pos_y - 1):
+        elif (neightbor.matrix_pos_x == node.matrix_pos_x) and (
+                neightbor.matrix_pos_y == node.matrix_pos_y - 1):
             node.top_border.color = color
             neightbor.bottom_border.color = color
 
@@ -307,7 +318,8 @@ class Maze():
             self.remove_neighbors_visited()
             # filtra a lista de celulas com vizinhos não visitados
             without_neighbors_visited = [
-                x for x in without_neighbors_visited if len(x.neighbors_not_visited) > 0]
+                x for x in without_neighbors_visited if len(
+                    x.neighbors_not_visited) > 0]
             current_cell = random.choice(without_neighbors_visited)
 
             if len(current_cell.neighbors_not_visited) > 0:
@@ -374,7 +386,8 @@ class Maze():
         distances = {}
         for i in range(0, int(HEIGHT / SIZE)):
             for j in range(0, int(WIDTH / SIZE)):
-                if self.maze[i][j] == self.maze[player.matrix_pos_x][player.matrix_pos_y]:
+                if self.maze[i][j] == self.maze[player.matrix_pos_x][
+                        player.matrix_pos_y]:
                     distances[self.maze[i][j]] = 0
                 else:
                     distances[self.maze[i][j]] = max_distance
@@ -403,7 +416,7 @@ class Maze():
                 shorter_distance_node.right_border.color = PINK
             if shorter_distance_node.left_border.color == YELLOW:
                 shorter_distance_node.left_border.color = PINK
-            
+
             for neighbor in shorter_distance_node.neighbors_connected:
                 total_distance = shorter_distance + neighbor[1]
                 if total_distance < distances[neighbor[0]]:
@@ -439,8 +452,10 @@ class Maze():
             for j in range(0, int(WIDTH / SIZE)):
                 self.maze[i][j].render(background)
         if self.maze_created:
-            self.maze[self.initial_coordinate_x][self.initial_coordinate_y].color = BEIGE
-            self.maze[self.final_coordinate_x][self.final_coordinate_y].color = LIGHTBLUE
+            self.maze[self.initial_coordinate_x][
+                self.initial_coordinate_y].color = BEIGE
+            self.maze[self.final_coordinate_x][
+                self.final_coordinate_y].color = LIGHTBLUE
 
 
 class Player():
@@ -457,36 +472,55 @@ class Player():
     def update(self, maze, events):
         for event in events:
             if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_LEFT and self.pos_x > BORDER_THICKNESS and (maze[self.matrix_pos_x][self.matrix_pos_y].left_border.color != BLACK):
-                    
-                    for cell in maze[self.matrix_pos_x][self.matrix_pos_y].neighbors_connected:
-                        if cell[0] == maze[self.matrix_pos_x - 1][self.matrix_pos_y]:
-                            self.points += cell[1]
+                if (event.key == pygame.K_LEFT and
+                        self.pos_x > BORDER_THICKNESS and
+                        (maze[self.matrix_pos_x][
+                        self.matrix_pos_y].left_border.color is not BLACK)):
 
+                    for cell in maze[self.matrix_pos_x][
+                            self.matrix_pos_y].neighbors_connected:
+                        if cell[0] == maze[self.matrix_pos_x - 1][
+                                self.matrix_pos_y]:
+                            self.points += cell[1]
                     self.pos_x -= SIZE
                     self.matrix_pos_x -= 1
-                if event.key == pygame.K_RIGHT and self.pos_x + BORDER_THICKNESS < WIDTH - SIZE and (maze[self.matrix_pos_x][self.matrix_pos_y].right_border.color != BLACK):
-                    
-                    for cell in maze[self.matrix_pos_x][self.matrix_pos_y].neighbors_connected:
-                        if cell[0] == maze[self.matrix_pos_x + 1][self.matrix_pos_y]:
+
+                if (event.key == pygame.K_RIGHT and
+                        self.pos_x + BORDER_THICKNESS < WIDTH - SIZE and
+                        (maze[self.matrix_pos_x][
+                        self.matrix_pos_y].right_border.color is not BLACK)):
+
+                    for cell in maze[self.matrix_pos_x][
+                            self.matrix_pos_y].neighbors_connected:
+                        if cell[0] == maze[self.matrix_pos_x + 1][
+                                self.matrix_pos_y]:
                             self.points += cell[1]
-                    
                     self.pos_x += SIZE
                     self.matrix_pos_x += 1
-                if event.key == pygame.K_UP and self.pos_y > BORDER_THICKNESS and (maze[self.matrix_pos_x][self.matrix_pos_y].top_border.color != BLACK):
-                    
-                    for cell in maze[self.matrix_pos_x][self.matrix_pos_y].neighbors_connected:
-                        if cell[0] == maze[self.matrix_pos_x][self.matrix_pos_y - 1]:
+
+                if (event.key == pygame.K_UP and
+                        self.pos_y > BORDER_THICKNESS and
+                        (maze[self.matrix_pos_x][
+                        self.matrix_pos_y].top_border.color is not BLACK)):
+
+                    for cell in maze[self.matrix_pos_x][
+                            self.matrix_pos_y].neighbors_connected:
+                        if cell[0] == maze[self.matrix_pos_x][
+                                self.matrix_pos_y - 1]:
                             self.points += cell[1]
-                    
                     self.pos_y -= SIZE
                     self.matrix_pos_y -= 1
-                if event.key == pygame.K_DOWN and self.pos_y + BORDER_THICKNESS < HEIGHT - SIZE and (maze[self.matrix_pos_x][self.matrix_pos_y].bottom_border.color != BLACK):
-                    
-                    for cell in maze[self.matrix_pos_x][self.matrix_pos_y].neighbors_connected:
-                        if cell[0] == maze[self.matrix_pos_x][self.matrix_pos_y + 1]:
+
+                if (event.key == pygame.K_DOWN and
+                        self.pos_y + BORDER_THICKNESS < HEIGHT - SIZE and
+                        (maze[self.matrix_pos_x][
+                        self.matrix_pos_y].bottom_border.color is not BLACK)):
+
+                    for cell in maze[self.matrix_pos_x][
+                            self.matrix_pos_y].neighbors_connected:
+                        if cell[0] == maze[self.matrix_pos_x][
+                                self.matrix_pos_y + 1]:
                             self.points += cell[1]
-                    
                     self.pos_y += SIZE
                     self.matrix_pos_y += 1
 
@@ -522,12 +556,13 @@ class Game():
     def update(self, event):
         if not self.solved and not self.winner:
             self.player.update(self.maze.maze, event)
-        if self.player.matrix_pos_x == self.maze.final_coordinate_x and self.player.matrix_pos_y == self.maze.final_coordinate_y:
+        if (self.player.matrix_pos_x == self.maze.final_coordinate_x and
+                self.player.matrix_pos_y == self.maze.final_coordinate_y):
             self.winner = True
 
     def initial_game(self):
         self.background.fill(DARKBLUE)
-        pygame.draw.rect(self.background, BEIGE, [40, 40, 530, 580])
+        pygame.draw.rect(self.background, RED, [40, 40, 530, 580])
         pygame.draw.rect(self.background, LIGHTBLUE, [40, 100, 530, 450])
         pygame.draw.rect(self.background, BLACK, [110, 150, 380, 380])
         pygame.draw.rect(self.background, DARKBLUE, [110, 150, 380, 100])
@@ -536,7 +571,7 @@ class Game():
         text(self.background, "PRESS (ESC) TO CLOSE GAME",
              INTERMEDIARYORANGE, FONTSIZE_COMMANDS_INTIAL + 2, 165, 425)
         pygame.display.update()
-        pygame.time.wait(180)
+        pygame.time.wait(300)
         text(self.background, "PRESS (D) TO START GAME (DFS)",
              INTERMEDIARYORANGE, FONTSIZE_COMMANDS_INTIAL + 2, 125, 350)
         text(self.background, "PRESS (P) TO START GAME (PRIM'S)",
@@ -544,7 +579,7 @@ class Game():
         text(self.background, "PRESS (K) TO START GAME (KRUSKAL)",
              INTERMEDIARYORANGE, FONTSIZE_COMMANDS_INTIAL + 2, 125, 400)
         pygame.display.update()
-        pygame.time.wait(180)
+        pygame.time.wait(300)
 
     def end_of_game(self):
         self.maze.dijkstra(self.background, self.player)
@@ -557,9 +592,10 @@ class Game():
         self.player.render(self.background)
 
         # render numbers
-        for cell in self.maze.maze[self.player.matrix_pos_x][self.player.matrix_pos_y].neighbors_connected:
+        for cell in self.maze.maze[self.player.matrix_pos_x][
+                self.player.matrix_pos_y].neighbors_connected:
             text(self.background, str(cell[1]),
-                 WHITE, 15, cell[0].pos_x + 5, cell[0].pos_y + 5)
+                 WHITE, 20, cell[0].pos_x + 5, cell[0].pos_y + 5)
 
         if not self.solved and not self.winner:
             pygame.draw.rect(self.background, RED, [0, 601, SIZE, SIZE])
@@ -575,15 +611,15 @@ class Game():
                  0 + SIZE + 3, 601 + 2 * SIZE + 1 + 6)
 
             text(self.background, "PRESS (R) TO RETRY GAME",
-                 WHITE, FONTSIZE_MAZE, 220, 610)
+                 WHITE, FONTSIZE_MAZE, 200, 610)
             text(self.background, "PRESS (Q) TO GIVE UP",
-                 WHITE, FONTSIZE_MAZE, 230, 630)
+                 WHITE, FONTSIZE_MAZE, 210, 630)
             text(self.background, "PRESS (ESC) TO CLOSE GAME",
-                 WHITE, FONTSIZE_MAZE, 212, 650)
+                 WHITE, FONTSIZE_MAZE, 192, 650)
 
-            text(self.background, "MINIMUM " + str(self.maze.minpoints), WHITE,
-                 FONTSIZE_MAZE + 5, 450, 610)
-
+            text(self.background, "MINIMUM PATH [" + str(self.maze.minpoints) +
+                 "]", WHITE,
+                 FONTSIZE_MAZE + 5, 410, 610)
             text(self.background, "POINTS +" + str(self.player.points), WHITE,
                  FONTSIZE_MAZE + 5, 450, 630)
 
@@ -593,6 +629,11 @@ class Game():
                  WHITE, FONTSIZE_MAZE, 220, 630)
             text(self.background, "PRESS (ESC) TO CLOSE GAME",
                  WHITE, FONTSIZE_MAZE, 212, 650)
+            text(self.background, "MINIMUM PATH [" + str(self.maze.minpoints) +
+                 "]", WHITE,
+                 FONTSIZE_MAZE + 5, 410, 610)
+            text(self.background, "POINTS +" + str(self.player.points), WHITE,
+                 FONTSIZE_MAZE + 5, 450, 630)
         else:
             text(self.background, "YOU LOSE", RED, FONTSIZE_MAZE + 3, 262, 610)
             text(self.background, "PRESS (R) TO RETRY GAME",
@@ -607,7 +648,8 @@ class Game():
         while not self.start:
             self.initial_game()
             pygame.display.update()
-            if pygame.event.get(pygame.QUIT) or pygame.key.get_pressed()[pygame.K_ESCAPE]:
+            if pygame.event.get(pygame.QUIT) or pygame.key.get_pressed()[
+                    pygame.K_ESCAPE]:
                 pygame.quit()
                 sys.exit(0)
             for event in pygame.event.get():
@@ -627,7 +669,8 @@ class Game():
         self.maze.dijkstra_to_define_final(self.background)
         pygame.display.update()
         while not self.exit:
-            if pygame.event.get(pygame.QUIT) or pygame.key.get_pressed()[pygame.K_ESCAPE]:
+            if pygame.event.get(pygame.QUIT) or pygame.key.get_pressed()[
+                    pygame.K_ESCAPE]:
                 self.exit = True
             e = pygame.event.get()
             if self.winner:
@@ -639,7 +682,8 @@ class Game():
                         self.winner = False
                         self.start = False
                         self.run()
-                    if not self.solved and event.key == pygame.K_q and not self.winner:
+                    if (not self.solved and event.key == pygame.K_q and
+                            not self.winner):
                         self.background.fill(BLACK)
                         self.end_of_game()
                         self.solved = True
