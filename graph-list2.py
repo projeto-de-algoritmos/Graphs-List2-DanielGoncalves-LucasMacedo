@@ -417,7 +417,7 @@ class Maze():
             pygame.display.update()
 
         current = self.maze[self.final_coordinate_x][self.final_coordinate_y]
-        while (current.parent).parent != None:
+        while current.parent != initial_node:
             current = current.parent
             current.color = ORANGE
 
@@ -452,20 +452,41 @@ class Player():
         self.width = SIZE - 2 * BORDER_THICKNESS
         self.height = SIZE - 2 * BORDER_THICKNESS
         self.color = RED
+        self.points = 0
 
     def update(self, maze, events):
         for event in events:
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_LEFT and self.pos_x > BORDER_THICKNESS and (maze[self.matrix_pos_x][self.matrix_pos_y].left_border.color != BLACK):
+                    
+                    for cell in maze[self.matrix_pos_x][self.matrix_pos_y].neighbors_connected:
+                        if cell[0] == maze[self.matrix_pos_x - 1][self.matrix_pos_y]:
+                            self.points += cell[1]
+
                     self.pos_x -= SIZE
                     self.matrix_pos_x -= 1
                 if event.key == pygame.K_RIGHT and self.pos_x + BORDER_THICKNESS < WIDTH - SIZE and (maze[self.matrix_pos_x][self.matrix_pos_y].right_border.color != BLACK):
+                    
+                    for cell in maze[self.matrix_pos_x][self.matrix_pos_y].neighbors_connected:
+                        if cell[0] == maze[self.matrix_pos_x + 1][self.matrix_pos_y]:
+                            self.points += cell[1]
+                    
                     self.pos_x += SIZE
                     self.matrix_pos_x += 1
                 if event.key == pygame.K_UP and self.pos_y > BORDER_THICKNESS and (maze[self.matrix_pos_x][self.matrix_pos_y].top_border.color != BLACK):
+                    
+                    for cell in maze[self.matrix_pos_x][self.matrix_pos_y].neighbors_connected:
+                        if cell[0] == maze[self.matrix_pos_x][self.matrix_pos_y - 1]:
+                            self.points += cell[1]
+                    
                     self.pos_y -= SIZE
                     self.matrix_pos_y -= 1
                 if event.key == pygame.K_DOWN and self.pos_y + BORDER_THICKNESS < HEIGHT - SIZE and (maze[self.matrix_pos_x][self.matrix_pos_y].bottom_border.color != BLACK):
+                    
+                    for cell in maze[self.matrix_pos_x][self.matrix_pos_y].neighbors_connected:
+                        if cell[0] == maze[self.matrix_pos_x][self.matrix_pos_y + 1]:
+                            self.points += cell[1]
+                    
                     self.pos_y += SIZE
                     self.matrix_pos_y += 1
 
@@ -559,6 +580,13 @@ class Game():
                  WHITE, FONTSIZE_MAZE, 230, 630)
             text(self.background, "PRESS (ESC) TO CLOSE GAME",
                  WHITE, FONTSIZE_MAZE, 212, 650)
+
+            text(self.background, "MINIMUM " + str(self.maze.minpoints), WHITE,
+                 FONTSIZE_MAZE + 5, 450, 610)
+
+            text(self.background, "POINTS +" + str(self.player.points), WHITE,
+                 FONTSIZE_MAZE + 5, 450, 630)
+
         elif self.winner:
             text(self.background, "YOU WIN", BLUE, FONTSIZE_MAZE + 3, 264, 610)
             text(self.background, "PRESS (R) TO RETRY GAME",
