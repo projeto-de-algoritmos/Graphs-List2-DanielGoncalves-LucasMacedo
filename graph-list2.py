@@ -93,14 +93,14 @@ class Node():
 
 
 class Maze():
-    def __init__(self, background, initial_x, initial_y, final_x, final_y):
+    def __init__(self, background, initial_x, initial_y):
         self.maze = []
         self.total_nodes = 0
         self.maze_created = False
         self.initial_coordinate_x = initial_x
         self.initial_coordinate_y = initial_y
-        self.final_coordinate_x = final_x
-        self.final_coordinate_y = final_y
+        self.final_coordinate_x = 0
+        self.final_coordinate_y = 0
 
         x = 0
         y = 0
@@ -190,6 +190,46 @@ class Maze():
                         self.maze[i - 1][j])  # top
                     self.maze[i][j].neighbors_not_visited.append(
                         self.maze[i][j - 1])  # left
+
+    def dijkstra_to_define_final(self, background):
+        initial_node = self.maze[self.initial_coordinate_x][self.initial_coordinate_y]
+        max_distance = 100000
+        distances = {}
+        for i in range(0, int(HEIGHT / SIZE)):
+            for j in range(0, int(WIDTH / SIZE)):
+                if self.maze[i][j] == self.maze[self.initial_coordinate_x][self.initial_coordinate_y]:
+                    distances[self.maze[i][j]] = 0
+                else:
+                    distances[self.maze[i][j]] = max_distance
+        for i in range(0, int(HEIGHT / SIZE)):
+            for j in range(0, int(WIDTH / SIZE)):
+                self.maze[i][j].explored = False
+        number_explored = 0
+        while number_explored < self.total_nodes:
+            # Pega o elemento com a menor distancia entre os nao explorados
+            shorter_distance = max_distance
+            for key, value in distances.items():
+                if value < shorter_distance and not key.explored:
+                    shorter_distance_node = key
+                    shorter_distance = value
+            # Marco como explorado
+            shorter_distance_node.explored = True
+            number_explored += 1
+
+            for neighbor in shorter_distance_node.neighbors_connected:
+                total_distance = shorter_distance + neighbor[1]
+                if total_distance < distances[neighbor[0]]:
+                    neighbor[0].parent = shorter_distance_node
+                    distances[neighbor[0]] = total_distance
+
+        # Pega o elemento com o maior distancia pro inicio
+        bigger_distance = -1
+        for key, value in distances.items():
+            if value > bigger_distance:
+                bigger_distance = value
+                bigger_distance_node = key
+        self.final_coordinate_x = bigger_distance_node.matrix_pos_x
+        self.final_coordinate_y = bigger_distance_node.matrix_pos_y
 
     def break_border(self, node, neightbor, color):
         # right
@@ -368,7 +408,6 @@ class Maze():
                     neighbor[0].parent = shorter_distance_node
                     distances[neighbor[0]] = total_distance
                 if neighbor[0].matrix_pos_x == self.final_coordinate_x and neighbor[0].matrix_pos_y == self.final_coordinate_y:
-                    print("ENCONTREI" + str(distances[neighbor[0]]))
 
             self.render(background)
             text(background, "SOLVING MAZE", WHITE,
@@ -393,8 +432,6 @@ class Maze():
             self.render(background)
             player.render(background)
             pygame.display.update()
-
-        print(distances)
 
     def render(self, background):
         for i in range(0, int(HEIGHT / SIZE)):
@@ -445,8 +482,6 @@ class Game():
 
         self.initial_coordinate_x = 0
         self.initial_coordinate_y = 0
-        self.final_coordinate_x = 0
-        self.final_coordinate_y = 0
         self.start = False
         self.solved = False
         self.winner = False
@@ -457,20 +492,15 @@ class Game():
         pygame.display.set_caption('Maze Game')
         self.initial_coordinate_x = random.randint(0, int(HEIGHT / SIZE) - 1)
         self.initial_coordinate_y = random.randint(0, int(WIDTH / SIZE) - 1)
-        self.final_coordinate_x = random.randint(0, int(HEIGHT / SIZE) - 1)
-        self.final_coordinate_y = random.randint(0, int(WIDTH / SIZE) - 1)
-        while self.final_coordinate_x == self.initial_coordinate_x or self.final_coordinate_y == self.initial_coordinate_y:
-            self.final_coordinate_x = random.randint(0, int(HEIGHT / SIZE) - 1)
-            self.final_coordinate_y = random.randint(0, int(WIDTH / SIZE) - 1)
         self.maze = Maze(self.background, self.initial_coordinate_x,
-                         self.initial_coordinate_y, self.final_coordinate_x, self.final_coordinate_y)
+                         self.initial_coordinate_y)
         self.player = Player(self.initial_coordinate_x,
                              self.initial_coordinate_y)
 
     def update(self, event):
         if not self.solved and not self.winner:
             self.player.update(self.maze.maze, event)
-        if self.player.matrix_pos_x == self.final_coordinate_x and self.player.matrix_pos_y == self.final_coordinate_y:
+        if self.player.matrix_pos_x == self.maze.final_coordinate_x and self.player.matrix_pos_y == self.maze.final_coordinate_y:
             self.winner = True
 
     def initial_game(self):
@@ -560,7 +590,8 @@ class Game():
                     self.background.fill(BLACK)
                     self.maze.kruskal(self.background)
         pygame.display.update()
-
+        self.maze.dijkstra_to_define_final(self.background)
+        pygame.display.update()
         while not self.exit:
             if pygame.event.get(pygame.QUIT) or pygame.key.get_pressed()[pygame.K_ESCAPE]:
                 self.exit = True
