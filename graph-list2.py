@@ -101,6 +101,7 @@ class Maze():
         self.initial_coordinate_y = initial_y
         self.final_coordinate_x = 0
         self.final_coordinate_y = 0
+        self.minpoints = 0
 
         x = 0
         y = 0
@@ -228,6 +229,7 @@ class Maze():
             if value > bigger_distance:
                 bigger_distance = value
                 bigger_distance_node = key
+        self.minpoints = bigger_distance
         self.final_coordinate_x = bigger_distance_node.matrix_pos_x
         self.final_coordinate_y = bigger_distance_node.matrix_pos_y
 
@@ -407,7 +409,6 @@ class Maze():
                 if total_distance < distances[neighbor[0]]:
                     neighbor[0].parent = shorter_distance_node
                     distances[neighbor[0]] = total_distance
-                if neighbor[0].matrix_pos_x == self.final_coordinate_x and neighbor[0].matrix_pos_y == self.final_coordinate_y:
 
             self.render(background)
             text(background, "SOLVING MAZE", WHITE,
@@ -533,6 +534,11 @@ class Game():
         self.maze.render(self.background)
 
         self.player.render(self.background)
+
+        # render numbers
+        for cell in self.maze.maze[self.player.matrix_pos_x][self.player.matrix_pos_y].neighbors_connected:
+            text(self.background, str(cell[1]),
+                 WHITE, 15, cell[0].pos_x + 5, cell[0].pos_y + 5)
 
         if not self.solved and not self.winner:
             pygame.draw.rect(self.background, RED, [0, 601, SIZE, SIZE])
