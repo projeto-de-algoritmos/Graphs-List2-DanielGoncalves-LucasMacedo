@@ -57,6 +57,8 @@ class Node():
     def __init__(self, pos_x, pos_y):
         self.color = DARKGRAY
 
+        self.id = None
+        self.choosed = False
         self.visited = False
         self.explored = False
 
@@ -124,10 +126,13 @@ class Maze():
                     x for x in self.maze[i][j].neighbors_not_visited if not x.visited]
 
     def define_initial_neighbors_not_visited(self):
+        id = 0
         for i in range(0, int(HEIGHT / SIZE)):
             for j in range(0, int(WIDTH / SIZE)):
                 self.maze[i][j].matrix_pos_x = i
                 self.maze[i][j].matrix_pos_y = j
+                id += 1
+                self.maze[i][j].id = id
                 if i > 0 and j > 0 and i < int(HEIGHT / SIZE) - 1 and j < int(HEIGHT / SIZE) - 1:
                     self.maze[i][j].neighbors_not_visited.append(
                         self.maze[i + 1][j])  # bot
@@ -282,6 +287,38 @@ class Maze():
                     without_neighbors_visited.append(random_neighbor)
 
                 visited_cells_number += 1
+
+            self.render(background)
+            text(background, "GENERATING MAZE", WHITE,
+                 FONTSIZE_COMMANDS_INTIAL, 215, 620)
+            pygame.display.update()
+        self.maze_created = True
+
+    def kruskal(self, background):
+        
+        equals_id = False
+        while not equals_id:
+            # verifica se todas as celulas pertencem ao mesmo conjunto
+            ids = set()
+            for i in range(0, int(HEIGHT / SIZE)):
+                for j in range(0, int(WIDTH / SIZE)):
+                    ids.add(self.maze[i][j].id)
+            if (len(ids) == 1):
+                equals_id = True
+
+            current_cell = random.choice(random.choice(self.maze))
+            random_neighbor = random.choice(current_cell.neighbors_not_visited)
+
+            if random_neighbor.id != current_cell.id:
+                current_cell.color = YELLOW
+                self.break_border(current_cell, random_neighbor, YELLOW)
+                self.add_edge(current_cell, random_neighbor)
+                random_neighbor.color = YELLOW
+                id_neighbor = random_neighbor.id
+                for i in range(0, int(HEIGHT / SIZE)):
+                    for j in range(0, int(WIDTH / SIZE)):
+                        if self.maze[i][j].id == id_neighbor:
+                            self.maze[i][j].id = current_cell.id
 
             self.render(background)
             text(background, "GENERATING MAZE", WHITE,
@@ -497,10 +534,10 @@ class Game():
                     self.start = True
                     self.background.fill(BLACK)
                     self.maze.prim(self.background)
-                # if event.type == pygame.KEYDOWN and event.key == pygame.K_k:
-                #     self.start = True
-                #     self.background.fill(BLACK)
-                #     self.maze.kruskal(self.background)
+                if event.type == pygame.KEYDOWN and event.key == pygame.K_k:
+                    self.start = True
+                    self.background.fill(BLACK)
+                    self.maze.kruskal(self.background)
         pygame.display.update()
 
         while not self.exit:
