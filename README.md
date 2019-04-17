@@ -66,23 +66,23 @@ if one pulled and stretched out the paths in the maze in the proper way, the res
 
 - 1. Make the initial cell and mark it as visited <br>
 - 2. While there are unvisited cells <br>
-- 3. Escolhe um nó que já foi visitado e que tenha ao menos um vizinho não visitado <br>
-    - 1. Escolhe um vizinho aleatório que não tenha sido visitado <br>
-        - 1. Marca a conexão entre o atual e o vizinho e o peso para a aresta
-        - 2. Remove a parede entre o atual e o vizinho escolhido
+- 3. Choose a node that has already been visited and has at least one unvisited neighbor <br>
+    - 1. Choose a random neighbor who has not been visited <br>
+        - 1. Mark the connection between the current and the neighbor and the weight for the edge
+        - 2. Removes the wall between the current and the chosen neighbor
 
 ![prim](gifs/prim.gif)
 
 #### Kruskal algorithm
 
-- 1. Cada nó é iniciado com um id diferente e único <br>
-- 2. Enquanto o id de todos os nós do grafo não forem iguais <br>
-    - 1. Escolhe um nó que possui ao menos um vizinho com id diferente <br>
-        - 1. Escolhe um vizinho que não tenha id igual <br>
-            - 1. Marca a conexão entre o atual e o vizinho e o peso para a aresta <br>
-            - 2. Remove a parede entre o atual e o vizinho escolhido <br>
-            - 3. Iguala o id do vizinho ao id do atual <br>
-                - 1. Faça de todos os nós iguais ao id do vizinho iguais ao id do atual <br>
+- 1. Each node is started with a unique and unique id <br>
+- 2. As long as the id of all nodes in the graph are not equal <br>
+    - 1. Choose a node that has at least one neighbor with different id <br>
+        - 1. Choose a neighbor who does not have equal id <br>
+            - 1. Mark the connection between the current and the neighbor and the weight for the edge <br>
+            - 2. Removes the wall between the current and the chosen neighbor <br>
+            - 3. Equals the neighbor's id to the current id <br>
+                - 1. Make all nodes equal to the id of the neighbor equal to the id of the current <br>
 
 ![dfs](gifs/kruskal.gif)
 
@@ -91,15 +91,15 @@ if one pulled and stretched out the paths in the maze in the proper way, the res
 #### Dijkstra algorithm
 
 - 1. Make the initial cell and mark it as explored <br>
-- 2. Marque a distância para a célula inicial igual a zero e igual a infinito para as outras células
+- 2. Mark the distance to the starting cell equal to zero and equal to infinity for the other cells
 - 3. While there are not exploited cells <br>
-    - 1. Escolha o nó de menor distância dentre os não explorados <br>
-    - 2. Marque-o como explorado <br>
-    - 3. Para todo vizinho do nó escolhido <br>
-        - 1. Pega a distância até o pai <br>
-        - 2. Soma a distância do pai com o vizinho escolhido <br>
-        - 3. Verifica se é menor que a distância que já está no vizinho escolhido <br>
-            - 1. Se for menor, substitua <br>
+    - 1. Choose the node with the shortest distance from the unexplored <br>
+    - 2. Mark it as scanned <br>
+    - 3. For every neighbor of the chosen node <br>
+        - 1. Take the distance to the father <br>
+        - 2. Sum the distance of the father with the chosen neighbor <br>
+        - 3. Checks if it is less than the distance that is already in the chosen neighbor <br>
+            - 1. If smaller, replace <br>
 
 ![dijkstra](gifs/dijkstra.gif)
 
