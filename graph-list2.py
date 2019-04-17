@@ -58,7 +58,6 @@ class Node():
         self.color = DARKGRAY
 
         self.id = None
-        self.choosed = False
         self.visited = False
         self.explored = False
 
@@ -116,8 +115,9 @@ class Maze():
         self.define_initial_neighbors_not_visited()
 
     def add_edge(self, node, neighbor):
-        neighbor.neighbors_connected.append(node)
-        node.neighbors_connected.append(neighbor)
+        edge_weight = random.randint(1, 20)
+        neighbor.neighbors_connected.append((node, edge_weight))
+        node.neighbors_connected.append((neighbor, edge_weight))
 
     def remove_neighbors_visited(self):
         for i in range(0, int(HEIGHT / SIZE)):
@@ -295,7 +295,6 @@ class Maze():
         self.maze_created = True
 
     def kruskal(self, background):
-        
         equals_id = False
         while not equals_id:
             # verifica se todas as celulas pertencem ao mesmo conjunto
@@ -326,31 +325,51 @@ class Maze():
             pygame.display.update()
         self.maze_created = True
 
-    def bfs(self, background, player):
+    def dijkstra(self, background, player):
         initial_node = self.maze[player.matrix_pos_x][player.matrix_pos_y]
-        initial_node.explored = True
-        find = False
-        queue = [initial_node]
-        while len(queue) > 0 and not find:
-            queue[0].color = PINK
 
-            if queue[0].top_border.color == YELLOW:
-                queue[0].top_border.color = PINK
-            if queue[0].bottom_border.color == YELLOW:
-                queue[0].bottom_border.color = PINK
-            if queue[0].right_border.color == YELLOW:
-                queue[0].right_border.color = PINK
-            if queue[0].left_border.color == YELLOW:
-                queue[0].left_border.color = PINK
+        max_distance = 100000
+        distances = {}
+        for i in range(0, int(HEIGHT / SIZE)):
+            for j in range(0, int(WIDTH / SIZE)):
+                if self.maze[i][j] == self.maze[player.matrix_pos_x][player.matrix_pos_y]:
+                    distances[self.maze[i][j]] = 0
+                else:
+                    distances[self.maze[i][j]] = max_distance
+        for i in range(0, int(HEIGHT / SIZE)):
+            for j in range(0, int(WIDTH / SIZE)):
+                self.maze[i][j].explored = False
+        number_explored = 0
+        while number_explored < self.total_nodes:
+            # Pega o elemento com a menor distancia entre os nao explorados
+            shorter_distance = max_distance
+            for key, value in distances.items():
+                if value < shorter_distance and not key.explored:
+                    shorter_distance_node = key
+                    shorter_distance = value
+            # Marco como explorado
+            shorter_distance_node.explored = True
+            number_explored += 1
 
-            u = queue.pop(0)
-            for i in u.neighbors_connected:
-                if i.explored == False:
-                    i.parent = u
-                    i.explored = True
-                    queue.append(i)
-                    if i.matrix_pos_x == self.final_coordinate_x and i.matrix_pos_y == self.final_coordinate_y:
-                        find = True
+            shorter_distance_node.color = PINK
+
+            if shorter_distance_node.top_border.color == YELLOW:
+                shorter_distance_node.top_border.color = PINK
+            if shorter_distance_node.bottom_border.color == YELLOW:
+                shorter_distance_node.bottom_border.color = PINK
+            if shorter_distance_node.right_border.color == YELLOW:
+                shorter_distance_node.right_border.color = PINK
+            if shorter_distance_node.left_border.color == YELLOW:
+                shorter_distance_node.left_border.color = PINK
+            
+            for neighbor in shorter_distance_node.neighbors_connected:
+                total_distance = shorter_distance + neighbor[1]
+                if total_distance < distances[neighbor[0]]:
+                    neighbor[0].parent = shorter_distance_node
+                    distances[neighbor[0]] = total_distance
+                if neighbor[0].matrix_pos_x == self.final_coordinate_x and neighbor[0].matrix_pos_y == self.final_coordinate_y:
+                    print("ENCONTREI" + str(distances[neighbor[0]]))
+
             self.render(background)
             text(background, "SOLVING MAZE", WHITE,
                  FONTSIZE_COMMANDS_INTIAL, 218, 620)
@@ -374,6 +393,8 @@ class Maze():
             self.render(background)
             player.render(background)
             pygame.display.update()
+
+        print(distances)
 
     def render(self, background):
         for i in range(0, int(HEIGHT / SIZE)):
@@ -474,7 +495,7 @@ class Game():
         pygame.time.wait(180)
 
     def end_of_game(self):
-        self.maze.bfs(self.background, self.player)
+        self.maze.dijkstra(self.background, self.player)
 
     def render(self):
         self.background.fill(BLACK)
