@@ -1,4 +1,4 @@
-# <p align="center">Maze Adventures: Maze Game using Depth-First Search, Prim Algorithm, Kruskal Algorithm to generate maze and Dijkstra Algorithm to solve maze </p>
+# <p align="center">Maze Adventures 2.0: Maze Game using Depth-First Search, Prim Algorithm, Kruskal Algorithm to Generate Maze and Dijkstra Algorithm to Solve Maze </p>
 
 ## Autors
 
@@ -9,12 +9,12 @@
 
 ## Installation
 
-> * ``` git clone https://github.com/projeto-de-algoritmos/Graphs-List1-DanielGoncalves-LucasMacedo.git ``` <br> <br>
+> * ``` git clone https://github.com/projeto-de-algoritmos/Graphs-List2-DanielGoncalves-LucasMacedo.git ``` <br> <br>
 > * ``` pip3 install -r requirements.txt --user ```
 
 ## Execution
 
-> * ``` python3 graph-list1.py ```
+> * ``` python3 graph-list2.py ```
 
 ## About Maze
 
@@ -62,11 +62,38 @@ if one pulled and stretched out the paths in the maze in the proper way, the res
 
 #### Prim algorithm
 
+- 1. Make the initial cell and mark it as visited <br>
+- 2. While there are unvisited cells <br>
+- 3. Escolhe um nó que já foi visitado e que tenha ao menos um vizinho não visitado <br>
+    - 1. Escolhe um vizinho aleatório que não tenha sido visitado <br>
+        - 1. Marca a conexão entre o atual e o vizinho e o peso para a aresta
+        - 2. Remove a parede entre o atual e o vizinho escolhido
+
 #### Kruskal algorithm
+
+- 1. Cada nó é iniciado com um id diferente e único <br>
+- 2. Enquanto o id de todos os nós do grafo não forem iguais <br>
+    - 1. Escolhe um nó que possui ao menos um vizinho com id diferente <br>
+        - 1. Escolhe um vizinho que não tenha id igual <br>
+            - 1. Marca a conexão entre o atual e o vizinho e o peso para a aresta <br>
+            - 2. Remove a parede entre o atual e o vizinho escolhido <br>
+            - 3. Iguala o id do vizinho ao id do atual <br>
+                - 1. Faça de todos os nós iguais ao id do vizinho iguais ao id do atual <br>
 
 ### Maze solving algorithm
 
 #### Dijkstra algorithm
+
+- 1. Make the initial cell and mark it as explored <br>
+- 2. Marque a distância para a célula inicial igual a zero e igual a infinito para as outras células
+- 3. While there are not exploited cells <br>
+    - 1. Escolha o nó de menor distância dentre os não explorados <br>
+    - 2. Marque-o como explorado <br>
+    - 3. Para todo vizinho do nó escolhido <br>
+        - 1. Pega a distância até o pai <br>
+        - 2. Soma a distância do pai com o vizinho escolhido <br>
+        - 3. Verifica se é menor que a distância que já está no vizinho escolhido <br>
+            - 1. Se for menor, substitua <br>
 
 ## References
 

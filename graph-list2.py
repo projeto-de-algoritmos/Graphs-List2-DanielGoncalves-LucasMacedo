@@ -380,14 +380,15 @@ class Maze():
         self.maze_created = True
 
     def dijkstra(self, background, player):
-        initial_node = self.maze[player.matrix_pos_x][player.matrix_pos_y]
+        initial_node = self.maze[self.initial_coordinate_x][
+            self.initial_coordinate_y]
 
         max_distance = 100000
         distances = {}
         for i in range(0, int(HEIGHT / SIZE)):
             for j in range(0, int(WIDTH / SIZE)):
-                if self.maze[i][j] == self.maze[player.matrix_pos_x][
-                        player.matrix_pos_y]:
+                if self.maze[i][j] == self.maze[self.initial_coordinate_x][
+                        self.initial_coordinate_y]:
                     distances[self.maze[i][j]] = 0
                 else:
                     distances[self.maze[i][j]] = max_distance
