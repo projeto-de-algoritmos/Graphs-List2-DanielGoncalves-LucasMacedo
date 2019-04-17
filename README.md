@@ -47,6 +47,9 @@ if one pulled and stretched out the paths in the maze in the proper way, the res
 
 ### Maze generation algorithm
 
+![main](gifs/main.jpeg) <br>
+It is possible to choose between three maze generation algorithms
+
 #### Recursive backtracker using Depth-First Search
 
 - 1. Make the initial cell the current cell and mark it as visited <br>
