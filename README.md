@@ -60,6 +60,8 @@ if one pulled and stretched out the paths in the maze in the proper way, the res
         - 1. Pop a cell from the stack <br>
         - 2. Make it the current cell <br>
 
+![dfs](gifs/dfs.gif)
+
 #### Prim algorithm
 
 - 1. Make the initial cell and mark it as visited <br>
@@ -68,6 +70,8 @@ if one pulled and stretched out the paths in the maze in the proper way, the res
     - 1. Escolhe um vizinho aleatório que não tenha sido visitado <br>
         - 1. Marca a conexão entre o atual e o vizinho e o peso para a aresta
         - 2. Remove a parede entre o atual e o vizinho escolhido
+
+![prim](gifs/prim.gif)
 
 #### Kruskal algorithm
 
@@ -79,6 +83,8 @@ if one pulled and stretched out the paths in the maze in the proper way, the res
             - 2. Remove a parede entre o atual e o vizinho escolhido <br>
             - 3. Iguala o id do vizinho ao id do atual <br>
                 - 1. Faça de todos os nós iguais ao id do vizinho iguais ao id do atual <br>
+
+![dfs](gifs/kruskal.gif)
 
 ### Maze solving algorithm
 
@@ -94,6 +100,8 @@ if one pulled and stretched out the paths in the maze in the proper way, the res
         - 2. Soma a distância do pai com o vizinho escolhido <br>
         - 3. Verifica se é menor que a distância que já está no vizinho escolhido <br>
             - 1. Se for menor, substitua <br>
+
+![dijkstra](gifs/dijkstra.gif)
 
 ## References
 
